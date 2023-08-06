@@ -1,15 +1,20 @@
 const items = Array.from(document.querySelectorAll('.slider__item'));
 const dots = Array.from(document.querySelectorAll('.slider__dot'));
 const arrows = Array.from(document.querySelectorAll('.slider__arrow'));
-let indexActiveItem = 0;
 
 arrows.forEach(el => {el.onclick = onClickSliderArrow});
 dots.forEach(el => {el.onclick = onClickSliderDot});
 
-setActive();
+setActive(0);
+
+function getIndexActiveItem() {
+    return items.findIndex(item => item.className.includes('slider__item_active'));
+}
 
 function onClickSliderArrow() {
-    unsetActive();
+    let indexActiveItem = getIndexActiveItem();
+
+    unsetActive(indexActiveItem);
 
     if (this.className.includes('slider__arrow_prev')) {
         indexActiveItem--;
@@ -23,21 +28,22 @@ function onClickSliderArrow() {
         }
     }
 
-    setActive();
+    setActive(indexActiveItem);
 }
 
 function onClickSliderDot() {
-    unsetActive();
-    indexActiveItem = dots.indexOf(this);
-    setActive();
+    unsetActive(getIndexActiveItem());
+    setActive(dots.indexOf(this));
 }
 
-function unsetActive() {
-    items[indexActiveItem].className = 'slider__item';
-    dots[indexActiveItem].className = 'slider__dot';
+function unsetActive(index) {
+    if (index < 0) return;
+    items[index].className = 'slider__item';
+    dots[index].className = 'slider__dot';
 }
 
-function setActive() {
-    items[indexActiveItem].className = 'slider__item slider__item_active';
-    dots[indexActiveItem].className = 'slider__dot slider__dot_active';
+function setActive(index) {
+    if (index < 0) return;
+    items[index].className = 'slider__item slider__item_active';
+    dots[index].className = 'slider__dot slider__dot_active';
 }
